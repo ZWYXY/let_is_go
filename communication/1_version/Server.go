@@ -38,7 +38,7 @@ func (this *Server) StartServer() {
 		conn, err := listen.Accept()
 		if err != nil {
 			fmt.Println("net.Listen err:", err)
-			return
+			continue
 		}
 		go this.BusinessHandler(conn)
 	}

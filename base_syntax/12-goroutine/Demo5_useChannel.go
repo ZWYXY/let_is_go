@@ -15,7 +15,7 @@ func main() {
 		}
 
 		// 关闭channel
-		// 关闭channel后还可以继续接收数据，但是发送数据
+		// 关闭channel后还可以继续接收数据，但是不能发送数据
 		close(c)
 	}()
 
