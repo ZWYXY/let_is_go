@@ -61,15 +61,15 @@ func (this *Server) BusinessHandler(conn net.Conn) {
 	// invoke用户上线方法
 	user.Online()
 
-	// 广播用户发送的信息
+	// 从管道中读取数据，并交给用户处理
 	go func() {
-		bytes := make([]byte, 1024)
-		// 从连接（Conn）中读取用户消息
-		n, err := conn.Read(bytes)
-
 		for {
+			bytes := make([]byte, 1024)
+			// 从连接（Conn）中读取用户消息 读不到信息，这里会阻塞
+			n, err := conn.Read(bytes)
 			if n == 0 {
-				user.Offline() // 用户下线
+				// 用户下线
+				user.Offline()
 				return
 			}
 
@@ -93,7 +93,7 @@ func (this *Server) BusinessHandler(conn net.Conn) {
 
 // 回写消息到管道
 func (this *Server) Broadcast(user *User, msg string) {
-	msgToBeSend := "[" + user.Addr + "]" + user.Name + ":" + msg
+	msgToBeSend := "\n[ " + user.Addr + " ] " + user.Name + ":" + msg
 	// 回写消息到Message管道
 	this.Message <- msgToBeSend
 }

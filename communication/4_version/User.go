@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net"
+	"strings"
 )
 
 type User struct {
@@ -18,9 +19,10 @@ type User struct {
 // 新建User
 func NewUser(conn net.Conn, server *Server) *User {
 	addr := conn.RemoteAddr().String()
+
 	user := &User{
 		Addr: addr,
-		Name: addr,
+		Name: strings.Split(addr, ":")[1],
 		Conn: conn,
 		C:    make(chan string),
 		// 创建User时初始化server
@@ -35,9 +37,9 @@ func NewUser(conn net.Conn, server *Server) *User {
 
 // 检测管道中的消息并发送到Conn中
 func (this *User) ListenMsg() {
+	fmt.Println(this.Addr + "的channel监听启动")
 	for {
 		// 这里监听User的管道，如果User的管道中没有信息会被阻塞，有信息就会读出来并回写给客户端
-		fmt.Println(this.Addr + "的channel监听启动")
 		msg := <-this.C // 无法从管道中获取数据时，会陷入阻塞
 		this.Conn.Write([]byte(msg + "\n"))
 	}
