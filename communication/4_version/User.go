@@ -27,7 +27,7 @@ func NewUser(conn net.Conn, server *Server) *User {
 		server: server,
 	}
 
-	// 启动当前user Channel消息的goroutine
+	// 启用一个goroutine 监听当前User的Channel就是C
 	go user.ListenMsg()
 
 	return user
@@ -65,5 +65,6 @@ func (this *User) Offline() {
 
 // 处理消息
 func (this *User) DealMessage(msg string) {
+	// 通过服务端广播，接收到的消息
 	this.server.Broadcast(this, msg)
 }

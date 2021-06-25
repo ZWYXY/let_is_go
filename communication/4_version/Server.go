@@ -7,6 +7,7 @@ import (
 	"sync" // 同步功能相关api包
 )
 
+// Server 结构体
 type Server struct {
 	Ip        string           // ip
 	Port      int              // 端口
@@ -29,23 +30,25 @@ func NewServer(ip string, port int) *Server {
 // StartServer Server的启动方法
 func (this *Server) StartServer() {
 	// 调用net包下的listen方法开启一个监听器
-	listen, err := net.Listen("tcp", fmt.Sprintf("%s:%d", this.Ip, this.Port))
+	listener, err := net.Listen("tcp", fmt.Sprintf("%s:%d", this.Ip, this.Port))
 	if err != nil {
 		fmt.Println("net.Listen err:", err)
 		return
 	}
 
-	defer listen.Close()
+	defer listener.Close()
 
-	// 启动监听Message的goroutine
+	// 开启一个goroutine，监听Message管道
 	go this.ListenMessage()
 
+	// 循环监听是否如果有连接建立
 	for {
-		conn, err := listen.Accept()
+		conn, err := listener.Accept() // 如果没有客户端接入，这里会一直阻塞，下面的代码就无法执行
 		if err != nil {
 			fmt.Println("net.Listen err:", err)
 			continue
 		}
+		// 有连接建立，开启goroutine处理业务
 		go this.BusinessHandler(conn)
 	}
 }
@@ -55,19 +58,18 @@ func (this *Server) BusinessHandler(conn net.Conn) {
 	// 创建User
 	user := NewUser(conn, this)
 
-	// 用户上线
+	// invoke用户上线方法
 	user.Online()
 
 	// 广播用户发送的信息
 	go func() {
-		//
 		bytes := make([]byte, 1024)
+		// 从连接（Conn）中读取用户消息
 		n, err := conn.Read(bytes)
 
 		for {
 			if n == 0 {
-				// 用户下线
-				user.Offline()
+				user.Offline() // 用户下线
 				return
 			}
 
@@ -91,8 +93,9 @@ func (this *Server) BusinessHandler(conn net.Conn) {
 
 // 回写消息到管道
 func (this *Server) Broadcast(user *User, msg string) {
-	sendMsg := "[" + user.Addr + "]" + user.Name + ":" + msg
-	this.Message <- sendMsg // 回写消息到Server管道
+	msgToBeSend := "[" + user.Addr + "]" + user.Name + ":" + msg
+	// 回写消息到Message管道
+	this.Message <- msgToBeSend
 }
 
 // 从管道中取出消息并回写给客户端
