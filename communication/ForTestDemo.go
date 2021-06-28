@@ -23,8 +23,8 @@ func main() {
 	fmt.Println(myByteArray[0]) // slice(动态数组)从0开始
 	fmt.Println(myByteArray[1])
 	fmt.Println(myByteArray[4])
-	fmt.Println(myByteArray[:4]) // 从0开始截取，[0,4)   前开后闭，懂我意思吧
-	fmt.Println(myByteArray[4:]) // 从4开始截取，[4,end) 前开后闭，懂我意思吧
+	fmt.Println(myByteArray[:4]) // 从下标0开始截取，[0,4)   前开后闭，懂我意思吧 // [10 20 30 40]
+	fmt.Println(myByteArray[4:]) // 从下标4开始截取，[4,end) 前开后闭，懂我意思吧 // [50 60 70 80 90 100]
 
 	select {}
 
