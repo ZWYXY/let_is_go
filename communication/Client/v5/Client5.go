@@ -132,9 +132,21 @@ func (client *MyClient) DealResponse() {
 
 // 公聊模式
 func (client *MyClient) SendToAll() {
+	fmt.Println("请输入聊天内容 >>>>, 输入exit退出")
 	var msg string
 	fmt.Scanln(&msg)
-	client.ServerConn.Write([]byte(msg))
+	for msg != "exit" {
+		if len(msg) != 0 {
+			_, err := client.ServerConn.Write([]byte(msg))
+			if err != nil {
+				fmt.Println("conn write err:", err)
+			}
+		}
+		msg = ""
+		fmt.Println("请输入聊天内容 >>>>, 输入exit退出")
+		fmt.Scanln(&msg)
+	}
+
 }
 
 // 私聊模式
