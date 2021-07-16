@@ -16,14 +16,15 @@ package main
 		my "5-init/lib1"
 		_ "fmt"
 	)
-*/
-import (
-	"5-init/lib"
-	"5-init/lib1"
+*/import (
+	"communication/base_syntax/5-init/lib"
+	"communication/base_syntax/5-init/lib1"
 )
 
 func main() {
 
+	//lib.MyDisplay()
+	//lib1.MyDisplay()
 	lib.MyDisplay()
 	lib1.MyDisplay()
 }
