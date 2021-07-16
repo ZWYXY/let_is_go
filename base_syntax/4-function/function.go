@@ -2,6 +2,11 @@ package main
 
 import "fmt"
 
+/*
+	这些是演示函数的声明和使用
+	还有一类特殊的函数 叫做method，建议在学习了OOP后再来看，本包下的另一个文件method的简单演示
+*/
+
 func foo1(a string, b int) int {
 	fmt.Println("-----foo1-----")
 	fmt.Println("a =", a)
