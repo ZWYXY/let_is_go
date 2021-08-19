@@ -34,4 +34,12 @@ func main() {
 	for index, value := range slice3 {
 		fmt.Printf("index = %d, value = %d\n", index, value)
 	}
+
+	slice4 := make([]int, 0, 2)
+	slice4 = append(slice4, 1)
+	slice4 = append(slice4, 2)
+	slice4 = append(slice4, 3)
+	for index, value := range slice4 {
+		fmt.Printf("index = %d, value = %d, cap = %d\n", index, value, cap(slice4))
+	}
 }
